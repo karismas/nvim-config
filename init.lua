@@ -27,3 +27,23 @@ vim.opt.termguicolors = true
 
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+
+vim.opt.hlsearch = true 
+vim.opt.incsearch = true 
+
+vim.opt.scrolloff = 8
+
+-- vim.keymap.set("n", "<C-d>", "<C-d>zz")
+-- vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+-- local hooks = require "core.hooks"
+
+-- hooks.add("setup_mappings", function(map)
+-- 
+-- 	map("n", "n", "nzzzv")
+-- 	map("N", "N", "Nzzzv")
+-- 
+-- end)
