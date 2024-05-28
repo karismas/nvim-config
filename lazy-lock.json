@@ -1,11 +1,22 @@
 {
+  "LuaSnip": { "branch": "master", "commit": "03c8e67eb7293c404845b3982db895d59c0d1538" },
+  "friendly-snippets": { "branch": "main", "commit": "dd2fd1281d4b22e7b4a5bfafa3e142d958e251f2" },
+  "harpoon": { "branch": "harpoon2", "commit": "0378a6c428a0bed6a2781d459d7943843f374bce" },
   "lazy.nvim": { "branch": "main", "commit": "3f13f080434ac942b150679223d54f5ca91e0d52" },
   "markdown-preview.nvim": { "branch": "master", "commit": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee" },
+  "mason-lspconfig.nvim": { "branch": "main", "commit": "a4caa0d083aab56f6cd5acf2d42331b74614a585" },
+  "mason.nvim": { "branch": "main", "commit": "49ff59aded1047a773670651cfa40e76e63c6377" },
   "neoscroll.nvim": { "branch": "master", "commit": "e78657719485c5663b88e5d96ffcfb6a2fe3eec0" },
   "nvim-autopairs": { "branch": "master", "commit": "4f41e5940bc0443fdbe5f995e2a596847215cd2a" },
+  "nvim-cmp": { "branch": "main", "commit": "5260e5e8ecadaf13e6b82cf867a909f54e15fd07" },
+  "nvim-lspconfig": { "branch": "master", "commit": "eadcee1573ca9d0e0cd36a49f620186a8dfdc607" },
   "nvim-tree.lua": { "branch": "master", "commit": "76db7ed0da3027882dd0a72de18643c2e26956dc" },
+  "nvim-treesitter": { "branch": "master", "commit": "30de5e7e9486fb1b1b8c2a1e71052b13f94f1cb0" },
+  "nvim-treesitter-textobjects": { "branch": "master", "commit": "5f9bf4b1ead7707e4e74e5319ee56bdc81fb73db" },
   "nvim-web-devicons": { "branch": "master", "commit": "794bba734ec95eaff9bb82fbd112473be2087283" },
   "plenary.nvim": { "branch": "master", "commit": "08e301982b9a057110ede7a735dd1b5285eb341f" },
   "telescope.nvim": { "branch": "master", "commit": "d90956833d7c27e73c621a61f20b29fdb7122709" },
-  "tokyonight.nvim": { "branch": "main", "commit": "67afeaf7fd6ebba000633e89f63c31694057edde" }
+  "tokyonight.nvim": { "branch": "main", "commit": "67afeaf7fd6ebba000633e89f63c31694057edde" },
+  "undotree": { "branch": "master", "commit": "56c684a805fe948936cda0d1b19505b84ad7e065" },
+  "vim-be-good": { "branch": "master", "commit": "4fa57b7957715c91326fcead58c1fa898b9b3625" }
 }
