@@ -65,6 +65,8 @@ end)
 -- └─────────────┘
 local api = require("nvim-tree.api")
 vim.keymap.set('n', '<leader>tt', api.tree.toggle)
+vim.keymap.set('n', '<leader>tl', function() api.tree.close() api.tree.toggle({focus = false}) end)
+vim.keymap.set('n', '<leader>th', api.tree.open)
 
 -- ┌───────────┐
 -- │  HARPOON  │
@@ -79,6 +81,8 @@ vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)
 -- ┌────────────┐
 -- │  UNDOTREE  │
 -- └────────────┘
+
+vim.cmd([[let g:undotree_SetFocusWhenToggle = 1]])
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 
 -- Unsure
