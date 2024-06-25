@@ -50,6 +50,22 @@ vim.keymap.set("n", "Q", "<nop>")
 -- Search and replace current word hovered over
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 
+-- ┌────────────┐
+-- │    HELP    │
+-- └────────────┘
+vim.keymap.set('n', '<leader>h', function()
+	 vim.cmd('help ' .. vim.fn.input("Help > "))
+	 vim.cmd('resize ' .. vim.api.nvim_win_get_height(0) * 2)
+end)
+
+-- ┌─────────────┐
+-- │     MAN     │
+-- └─────────────┘
+vim.keymap.set('n', '<leader>m', function()
+	vim.cmd('Man ' .. vim.fn.input("Man > "))
+	 vim.cmd('resize ' .. vim.api.nvim_win_get_height(0) * 2)
+end)
+
 -- ┌─────────────┐
 -- │  TELESCOPE  │
 -- └─────────────┘
