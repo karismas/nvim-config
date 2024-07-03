@@ -2,15 +2,39 @@
 -- │  STANDARD  │
 -- └────────────┘
 
+-- Change movement keys to be like directional arrows
+vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
+
+-- Change insert mode
+vim.keymap.set({ "n", "v" }, "H", "I")
+
+-- Change large jump movements
+-- vim.keymap.set({ "n", "v" }, "<C-l>", "w")
+-- vim.keymap.set({ "n", "v" }, "<C-j>", "b")
+
+-- Change scrolling keys
+local neoscroll = require("neoscroll")
+vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, true, 300) end)
+vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, true, 300) end)
+
+-- Change top/bottom of document keybinds
+vim.keymap.set("n", "I", "gg")
+vim.keymap.set("n", "K", "G")
+
 -- Tabbed selections stay selected
+-- Eventually make so that undo sends back to first selection
 vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("v", "<", "<gv")
 
 -- Clear the recent search terms so 
 -- hitting "N" or "n" won't cause 
 -- highlights to appear again
-vim.keymap.set("n", "<C-l>", ":let @/ = \"\"<CR>")
+vim.keymap.set("n", "<C-x>", ":let @/ = \"\"<CR>")
+
+-- Moves paste register into system clipboard
 vim.keymap.set("n", "<leader>e", ":let @+=@\"<CR>")
+-- Moves system clipboard into paste register 
+vim.keymap.set("n", "<leader>w", ":let @\"=@+<CR>")
 
 -- Keeps cursor at center when scrolling
 -- Interferes with smoothscrolling plugin
@@ -26,10 +50,14 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Allows use of 'J' without cursor moving
-vim.keymap.set("n", "J", "mzJ`z")
+-- vim.keymap.set("n", "J", "mzJ`z")
 
 -- Quick paste for clipboard register
-vim.keymap.set("n", "<leader>p", "\"+p")
+-- vim.keymap.set("n", "<leader>p", "\"+p")
+
+--- Paste non-terminated buffer onto next/previous line
+vim.keymap.set("n", "<leader>p", "o<esc>p")
+vim.keymap.set("n", "<leader>P", "O<esc>p")
 
 -- Keeps word in register after pasting over word
 vim.keymap.set("x", "<leader>p", "\"_dP")
@@ -50,20 +78,81 @@ vim.keymap.set("n", "Q", "<nop>")
 -- Search and replace current word hovered over
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 
+-- Search and replace current selected text
+vim.keymap.set("v", "<leader>s", function()
+
+	local str = ""
+
+	-- If in visual mode
+	if vim.fn.mode() == 'v' then
+
+		-- Get start and end of visual selection
+		local vstart = vim.fn.getpos("v")
+		local vend = vim.fn.getpos(".")
+
+		-- If the start is past the end, flip them
+		if vstart[3] > vend[3] then
+			local temp = vstart
+			vstart = vend
+			vend = temp
+		end
+
+		-- Grab the text in the visual selection
+		str = vim.api.nvim_buf_get_text(0, vstart[2] - 1, vstart[3] - 1, vend[2] - 1, vend[3], {})[1]
+
+	-- If in visual line mode
+	elseif vim.fn.mode() == 'V' then
+
+		-- Get the cursor position
+		local vpos = vim.fn.getcurpos()
+
+		-- Grab the text in the visual line selection
+		str = vim.api.nvim_buf_get_lines(0, vpos[2] - 1, vpos[2], false)[1]
+	end
+
+	-- Escape all backslashes first
+	str = str:gsub("\\", "\\\\")
+
+	-- Escape other important characters
+	local metachars = {"*", "%["}
+	for i = 1, #metachars do
+		str = str:gsub(metachars[i], "\\" .. metachars[i])
+	end
+
+	-- Choose first delimiter not already in string
+	-- According to Vim Tips Wiki:
+	-- "You can use most non-alphanumeric characters (but not \, " or |)."
+	local delimiters = {"%", "_", "-", "#", ",", "/"}
+	for i = 1, #delimiters do
+		if not string.find(str, delimiters[i], 1, true) then
+			return ":s" .. delimiters[i] .. str .. delimiters[i] .. delimiters[i] .. "gI<Left><Left><Left>"
+		end
+	end
+
+	print("All possible delimiters have been used in the highlighted text.")
+
+end, { expr = true })
+
 -- ┌────────────┐
 -- │    HELP    │
 -- └────────────┘
 vim.keymap.set('n', '<leader>h', function()
-	 vim.cmd('help ' .. vim.fn.input("Help > "))
-	 vim.cmd('resize ' .. vim.api.nvim_win_get_height(0) * 2)
+	vim.ui.input({ prompt = "Help > ", completion = "help" }, function(input)
+		if input == nil then return end
+		vim.cmd('help ' .. input)
+		vim.cmd('resize ' .. vim.api.nvim_win_get_height(0) * 2)
+	end)
 end)
 
 -- ┌─────────────┐
 -- │     MAN     │
 -- └─────────────┘
 vim.keymap.set('n', '<leader>m', function()
-	vim.cmd('Man ' .. vim.fn.input("Man > "))
-	 vim.cmd('resize ' .. vim.api.nvim_win_get_height(0) * 2)
+	vim.ui.input({ prompt = "Man > "}, function(input)
+		if input == nil then return end
+		vim.cmd('Man ' .. input)
+		vim.cmd('resize ' .. vim.api.nvim_win_get_height(0) * 2)
+	end)
 end)
 
 -- ┌─────────────┐
@@ -71,8 +160,8 @@ end)
 -- └─────────────┘
 local builtin = require("telescope.builtin")
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>gf', builtin.git_files, {})
-vim.keymap.set('n', '<leader>sf', function()
+vim.keymap.set('n', '<leader>fg', builtin.git_files, {})
+vim.keymap.set('n', '<leader>fs', function()
 	builtin.grep_string({ search = vim.fn.input("Grep > ") }) -- Requires ripgrep
 end)
 

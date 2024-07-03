@@ -19,17 +19,20 @@ return {
 			-- local t = ls.text_node
 			-- local i = ls.insert_node
 
-			vim.keymap.set({"i", "s"}, "<C-x>", function()
+			vim.keymap.set({"n", "v"}, "<C-l>", "w")
+			vim.keymap.set({"n", "v"}, "<C-j>", "b")
+
+			vim.keymap.set({"i", "s"}, "<C-l>", function()
 				if ls.expand_or_jumpable() then
 					ls.expand_or_jump()
 				end
-			end, {silent = true})
+			end, { silent  = true })
 
-			vim.keymap.set({"i", "s"}, "<C-z>", function()
+			vim.keymap.set({"i", "s"}, "<C-j>", function()
 				if ls.jumpable(-1) then
 					ls.jump(-1)
 				end
-			end, {silent = true})
+			end, { silent  = true })
 
 			-- ls.add_snippets("lua", {
 			-- 	s("hello", {
@@ -65,8 +68,8 @@ return {
 				--- (Optional) Show source name in completion menu
 				formatting = cmp_format,
 				mapping = cmp.mapping.preset.insert({
-					['<C-k>'] = cmp.mapping.select_prev_item(),
-					['<C-j>'] = cmp.mapping.select_next_item(),
+					['<C-i>'] = cmp.mapping.select_prev_item(),
+					['<C-k>'] = cmp.mapping.select_next_item(),
 					['<C-b>'] = cmp.mapping.scroll_docs(-4),
 					['<C-f>'] = cmp.mapping.scroll_docs(4),
 					['<C-Space>'] = cmp.mapping.complete(),
@@ -78,3 +81,13 @@ return {
 		end
 	}
 }
+
+-- vim.keymap.set({"i", "s"}, "<C-x>", function()
+-- if ls.expand_or_jumpable() then
+-- ls.expand_or_jump()
+-- end
+
+-- vim.keymap.set({"i", "s"}, "<C-z>", function()
+-- if ls.jumpable(-1) then
+-- ls.jump(-1)
+-- end
