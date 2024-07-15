@@ -37,7 +37,7 @@ vim.keymap.set("n", "<leader>e", ":let @+=@\"<CR>")
 vim.keymap.set("n", "<leader>w", ":let @\"=@+<CR>")
 
 -- Keeps cursor at center when scrolling
--- Interferes with smoothscrolling plugin
+-- (Interferes with smoothscrolling plugin)
 -- vim.keymap.set("n", "<C-d>", "<C-d>zz")
 -- vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
@@ -46,8 +46,8 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- Can select text and move it up and down and autoindents
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "I", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '>+1<CR>gv=gv")
 
 -- Allows use of 'J' without cursor moving
 -- vim.keymap.set("n", "J", "mzJ`z")
