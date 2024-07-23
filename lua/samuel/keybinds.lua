@@ -8,6 +8,26 @@ vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
 -- Change insert mode
 vim.keymap.set({ "n", "v" }, "H", "I")
 
+-- Relative yank and place at cursor
+vim.keymap.set("n", "<leader>y", function()
+	local command = ""
+	while true do
+		local inp = vim.fn.getchar()
+		if inp >= 48 and inp <= 57 then
+			command = command .. (inp - 48)
+		elseif inp == 105 then
+			command = ":-" .. command
+			break
+		elseif inp == 107 then
+			command = ":+" .. command
+			break
+		elseif inp == 27 then
+			return
+		end
+	end
+	command = command .. "y | put<CR>"
+	return command
+end, {expr = true})
 -- Change large jump movements
 -- vim.keymap.set({ "n", "v" }, "<C-l>", "w")
 -- vim.keymap.set({ "n", "v" }, "<C-j>", "b")
@@ -21,10 +41,79 @@ vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, t
 vim.keymap.set("n", "I", "gg")
 vim.keymap.set("n", "K", "G")
 
+-- Indenting only takes one press
+vim.keymap.set("n", ">", ">>")
+vim.keymap.set("n", "<", "<<")
+
 -- Tabbed selections stay selected
--- Eventually make so that undo sends back to first selection
-vim.keymap.set("v", ">", ">gv")
-vim.keymap.set("v", "<", "<gv")
+-- The marks make it so screenflicker does not happen (due to scrolloff = 999)
+-- Function removes in-between tabs from undo history
+TABS_PRESSED = 0
+FAKE_ESCAPE = false
+DIRECTION = ""
+vim.api.nvim_create_autocmd('ModeChanged', {
+	callback = function()
+		local old_mode = vim.v.event.old_mode
+		local new_mode = vim.v.event.new_mode
+		if old_mode == 'V' and new_mode == 'n' then
+			if FAKE_ESCAPE then
+
+				FAKE_ESCAPE = false
+
+				if TABS_PRESSED ~= 0 then
+					vim.cmd('undo!')
+				end
+
+				if DIRECTION == "right" then
+					TABS_PRESSED = TABS_PRESSED + 1
+				elseif DIRECTION == "left" then
+					TABS_PRESSED = TABS_PRESSED - 1
+				end
+				DIRECTION = ""
+
+				local indent_direction = ""
+				if TABS_PRESSED > 0 then
+					indent_direction = ">"
+				elseif TABS_PRESSED < 0 then
+					indent_direction = "<"
+				end
+
+				local indent_string = ""
+				for _ = 1, math.abs(TABS_PRESSED), 1 do
+					indent_string = indent_string .. indent_direction
+				end
+
+				local keys = vim.api.nvim_replace_termcodes("gv", true, true, false)
+				vim.api.nvim_feedkeys(keys, "n", false)
+				vim.cmd(":'<,'>" .. indent_string)
+				keys = vim.api.nvim_replace_termcodes("gv", true, true, false)
+				vim.api.nvim_feedkeys(keys, "n", false)
+			else
+				TABS_PRESSED = 0
+			end
+		end
+	end
+})
+
+vim.keymap.set("v", ">", function()
+	local keys = vim.api.nvim_replace_termcodes("mm", true, true, false)
+	vim.api.nvim_feedkeys(keys, "v", false)
+	DIRECTION = "right"
+	FAKE_ESCAPE = true
+	return "<esc>"
+end, { expr = true })
+
+vim.keymap.set("v", "<", function()
+	local keys = vim.api.nvim_replace_termcodes("mm", true, true, false)
+	vim.api.nvim_feedkeys(keys, "v", false)
+	DIRECTION = "left"
+	FAKE_ESCAPE = true
+	return "<esc>"
+end, { expr = true })
+
+-- Original
+-- vim.keymap.set("v", ">", "mm>gv'm")
+-- vim.keymap.set("v", "<", "mm<gv'm")
 
 -- Clear the recent search terms so 
 -- hitting "N" or "n" won't cause 
@@ -63,9 +152,9 @@ vim.keymap.set("n", "<leader>P", "O<esc>p")
 vim.keymap.set("x", "<leader>p", "\"_dP")
 
 -- Quicker yank into system clipboard
-vim.keymap.set("n", "<leader>y", "\"+y")
-vim.keymap.set("v", "<leader>y", "\"+y")
-vim.keymap.set("n", "<leader>Y", "\"+Y")
+-- vim.keymap.set("n", "<leader>y", "\"+y")
+-- vim.keymap.set("v", "<leader>y", "\"+y")
+-- vim.keymap.set("n", "<leader>Y", "\"+Y")
 vim.keymap.set("n", "<leader>d", "\"+d")
 vim.keymap.set("v", "<leader>d", "\"+d")
 

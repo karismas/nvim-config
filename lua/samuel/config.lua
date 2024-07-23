@@ -45,6 +45,10 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 -- Highlights all cases of search
 vim.opt.hlsearch = true
 
+-- Allows modification of buffers (this is enabled for keybind that calls undo from vim.cmd)
+-- Although I'm not sure it is actually necessary
+vim.opt.modifiable = true
+
 -- Show matching search cases as
 -- search is typed
 vim.opt.incsearch = true
