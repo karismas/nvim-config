@@ -8,6 +8,29 @@ vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
 -- Change insert mode
 vim.keymap.set({ "n", "v" }, "H", "I")
 
+-- l and j movements with Control will move with w/e and ge/b
+-- depending on cursor placement
+vim.keymap.set({ "n", "v" }, "<C-l>", function()
+	local vpos = vim.fn.getcurpos()
+	local str = vim.api.nvim_buf_get_lines(0, vpos[2] - 1, vpos[2], false)[1]
+	local next_char = string.sub(str, vpos[3] + 1, vpos[3] + 1)
+	if next_char == " " then
+		return "w"
+	else
+		return "e"
+	end
+end, { expr = true })
+vim.keymap.set({ "n", "v" }, "<C-j>", function()
+	local vpos = vim.fn.getcurpos()
+	local str = vim.api.nvim_buf_get_lines(0, vpos[2] - 1, vpos[2], false)[1]
+	local prev_char = string.sub(str, vpos[3] - 1, vpos[3] - 1)
+	if prev_char == " " then
+		return "ge"
+	else
+		return "b"
+	end
+end, { expr = true })
+
 -- Relative yank and place at cursor
 vim.keymap.set("n", "<leader>y", function()
 	local command = ""
@@ -28,9 +51,6 @@ vim.keymap.set("n", "<leader>y", function()
 	command = command .. "y | put<CR>"
 	return command
 end, {expr = true})
--- Change large jump movements
--- vim.keymap.set({ "n", "v" }, "<C-l>", "w")
--- vim.keymap.set({ "n", "v" }, "<C-j>", "b")
 
 -- Change scrolling keys
 local neoscroll = require("neoscroll")
@@ -140,6 +160,7 @@ vim.keymap.set("v", "K", ":m '>+1<CR>gv=gv")
 
 -- Allows use of 'J' without cursor moving
 -- vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "Q", "mzJ`z")
 
 -- Quick paste for clipboard register
 -- vim.keymap.set("n", "<leader>p", "\"+p")
@@ -162,7 +183,7 @@ vim.keymap.set("v", "<leader>d", "\"+d")
 vim.keymap.set("n", "U", "<C-r>")
 
 -- Remove ex mode
-vim.keymap.set("n", "Q", "<nop>")
+-- vim.keymap.set("n", "Q", "<nop>")
 
 -- Search and replace current word hovered over
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
