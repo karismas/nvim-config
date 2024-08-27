@@ -8,6 +8,13 @@ vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
 -- Change insert mode
 vim.keymap.set({ "n", "v" }, "H", "I")
 
+-- We could use the following line of code so that
+-- inserting works in macros, but it would make "j" also
+-- go into insert mode, since j is set to h in the langmap
+-- so we need to figure something out...
+--
+-- vim.keymap.set({ "n", "v" }, "h", "i")
+
 -- l and j movements with Control will move with w/e and ge/b
 -- depending on cursor placement
 vim.keymap.set({ "n", "v" }, "<C-l>", function()
