@@ -8,6 +8,31 @@ vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
 -- Change insert mode
 vim.keymap.set({ "n", "v" }, "H", "I")
 
+-- WINDOWS ONLY
+-- Change Visual Block keybind
+vim.keymap.set("n", "<A-v>", "<C-q>")
+
+vim.keymap.set("n", "<leader>y", function()
+
+	local command = ""
+	while true do
+		local inp = vim.fn.getchar()
+		if inp >= 48 and inp <= 57 then
+			command = command .. (inp - 48)
+		elseif inp == 105 then
+			command = ":-" .. command
+			break
+		elseif inp == 107 then
+			command = ":+" .. command
+			break
+		elseif inp == 27 then
+			return
+		end
+	end
+	command = command .. "y | put<CR>"
+	return command
+end, {expr = true})
+
 -- Change large jump movements
 -- vim.keymap.set({ "n", "v" }, "<C-l>", "w")
 -- vim.keymap.set({ "n", "v" }, "<C-j>", "b")
@@ -46,8 +71,8 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -- Can select text and move it up and down and autoindents
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "I", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '>+1<CR>gv=gv")
 
 -- Allows use of 'J' without cursor moving
 -- vim.keymap.set("n", "J", "mzJ`z")
@@ -63,9 +88,9 @@ vim.keymap.set("n", "<leader>P", "O<esc>p")
 vim.keymap.set("x", "<leader>p", "\"_dP")
 
 -- Quicker yank into system clipboard
-vim.keymap.set("n", "<leader>y", "\"+y")
-vim.keymap.set("v", "<leader>y", "\"+y")
-vim.keymap.set("n", "<leader>Y", "\"+Y")
+-- vim.keymap.set("n", "<leader>y", "\"+y")
+-- vim.keymap.set("v", "<leader>y", "\"+y")
+-- vim.keymap.set("n", "<leader>Y", "\"+Y")
 vim.keymap.set("n", "<leader>d", "\"+d")
 vim.keymap.set("v", "<leader>d", "\"+d")
 
