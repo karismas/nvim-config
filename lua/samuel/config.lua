@@ -64,6 +64,10 @@ vim.opt.scrolloff = 999
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Enables persistent undo history
+-- even after closing files
+vim.opt.undofile = true
+
 -- Other netrw options
 -- vim.g.netrw_liststyle = 3
 -- vim.g.netrw_banner = 0
