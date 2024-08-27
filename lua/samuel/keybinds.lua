@@ -5,6 +5,8 @@
 -- Change movement keys to be like directional arrows
 vim.cmd('set langmap=oh,tj,ck,il,O^,I$')
 
+-- Figure out macros later!
+
 -- Change insert mode
 vim.keymap.set({ "n", "v" }, "H", "I")
 
