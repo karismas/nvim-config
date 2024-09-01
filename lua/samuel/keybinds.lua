@@ -1,25 +1,89 @@
--- ┌────────────┐
--- │  STANDARD  │
--- └────────────┘
+-- 	==============================================================================================================================================================
+-- 																		 ┌──────────┐
+-- 																		 │  MOTION  │
+-- 																		 └──────────┘
+-- 	==============================================================================================================================================================
 
--- Change movement keys to be like directional arrows
-vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
+-- Remaps i to select/delete/change up instead of waiting for text-object
+-- vim.keymap.set("o", "i", "<Up>")
+vim.keymap.set("o", "i", function()
 
--- DO NOT REMOVE: makes langmap work with mappings
-vim.opt.langremap = true
+	if vim.v.operator == "y" then
+		vim.cmd(":.-" .. vim.v.count1 .. ",.yank")
+		return "<Nop>"
+	end
 
--- Change insert mode
-vim.keymap.set({ "n", "v" }, "H", "I")
+	return "<Up>"
 
--- We could use the following line of code so that
--- inserting works in macros, but it would make "j" also
--- go into insert mode, since j is set to h in the langmap
--- so we need to figure something out...
---
--- vim.keymap.set({ "n", "v" }, "h", "i")
+end, { expr = true })
 
--- l and j movements with Control will move with w/e and ge/b
--- depending on cursor placement
+--          ┌────────┐                     ┌───┐    
+--          │  <Up>  │                     │ I │    
+-- ┌────────┼────────┼─────────┐   ➔   ┌───┼───┼───┐
+-- │ <Left> │ <Down> │ <Right> │       │ J │ K │ L │
+-- └────────┴────────┴─────────┘       └───┴───┴───┘
+
+vim.keymap.set({ "n", "v", "o" }, "j", "h")
+vim.keymap.set({ "n", "v", "o" }, "k", "j")
+vim.keymap.set({ "n", "v" }, "i", "k")
+
+
+
+
+
+
+
+
+
+
+--     ┌────┐               ┌───┐    
+--     │ gg │               │ I │    
+-- ┌───┼────┼───┐   ➔   ┌───┼───┼───┐
+-- │ ^ │ G  │ $ │       │ J │ K │ L │
+-- └───┴────┴───┘       └───┴───┴───┘
+
+vim.keymap.set({ "n", "v" }, "J", "^")
+vim.keymap.set({ "n", "v" }, "L", "$")
+vim.keymap.set({ "n", "o" }, "I", "gg")
+vim.keymap.set({ "n", "o" }, "K", "G")
+
+
+
+
+
+
+
+
+
+
+-- ┌───────┐       ┌───────┐
+-- │ <C-u> │       │ <C-i> │
+-- ├───────┤   ➔   ├───────┤
+-- │ <C-d> │       │ <C-k> │
+-- └───────┘       └───────┘
+
+local neoscroll = require("neoscroll")
+vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, true, 300) end)
+vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, true, 300) end)
+
+
+
+
+
+
+
+
+
+-- At start/end of word:
+-- ┌────┬────┐       ┌───────┬───────┐
+-- │ ge │ w  │   ➔   │ <C-j> │ <C-l> │
+-- └────┴────┘       └───────┴───────┘
+
+-- Inside of word:
+-- ┌───┬───┐       ┌───────┬───────┐
+-- │ b │ e │   ➔   │ <C-j> │ <C-l> │
+-- └───┴───┘       └───────┴───────┘
+
 vim.keymap.set({ "n", "v" }, "<C-l>", function()
 	local vpos = vim.fn.getcurpos()
 	local str = vim.api.nvim_buf_get_lines(0, vpos[2] - 1, vpos[2], false)[1]
@@ -30,6 +94,7 @@ vim.keymap.set({ "n", "v" }, "<C-l>", function()
 		return "e"
 	end
 end, { expr = true })
+
 vim.keymap.set({ "n", "v" }, "<C-j>", function()
 	local vpos = vim.fn.getcurpos()
 	local str = vim.api.nvim_buf_get_lines(0, vpos[2] - 1, vpos[2], false)[1]
@@ -41,35 +106,31 @@ vim.keymap.set({ "n", "v" }, "<C-j>", function()
 	end
 end, { expr = true })
 
--- Relative yank and place at cursor
-vim.keymap.set("n", "<leader>y", function()
-	local command = ""
-	while true do
-		local inp = vim.fn.getchar()
-		if inp >= 48 and inp <= 57 then
-			command = command .. (inp - 48)
-		elseif inp == 105 then
-			command = ":-" .. command
-			break
-		elseif inp == 107 then
-			command = ":+" .. command
-			break
-		elseif inp == 27 then
-			return
-		end
-	end
-	command = command .. "y | put<CR>"
-	return command
-end, {expr = true})
 
--- Change scrolling keys
-local neoscroll = require("neoscroll")
-vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, true, 300) end)
-vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, true, 300) end)
 
--- Change top/bottom of document keybinds
-vim.keymap.set("n", "I", "gg")
-vim.keymap.set("n", "K", "G")
+
+
+
+
+
+
+
+-- 	==============================================================================================================================================================
+-- 																	  ┌─────────────────┐ 
+-- 																	  │  ALTERING TEXT  │ 
+-- 																	  └─────────────────┘ 
+-- 	==============================================================================================================================================================
+
+
+
+
+
+-- Remaps h to insert
+vim.keymap.set({ "n", "v" }, "h", "i")
+-- Remaps h to wait for text-object
+vim.keymap.set("o", "h", "i", { noremap = true })
+-- Remaps H to insert at beginning of line
+vim.keymap.set({ "n", "v" }, "H", "I")
 
 -- Indenting only takes one press
 vim.keymap.set("n", ">", ">>")
@@ -141,6 +202,27 @@ vim.keymap.set("v", "<", function()
 	return "<esc>"
 end, { expr = true })
 
+-- Relative yank and place at cursor
+vim.keymap.set("n", "<leader>y", function()
+	local command = ""
+	while true do
+		local inp = vim.fn.getchar()
+		if inp >= 48 and inp <= 57 then
+			command = command .. (inp - 48)
+		elseif inp == 105 then
+			command = ":-" .. command
+			break
+		elseif inp == 107 then
+			command = ":+" .. command
+			break
+		elseif inp == 27 then
+			return
+		end
+	end
+	command = command .. "y | put<CR>"
+	return command
+end, {expr = true})
+
 -- Original
 -- vim.keymap.set("v", ">", "mm>gv'm")
 -- vim.keymap.set("v", "<", "mm<gv'm")
@@ -168,9 +250,8 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("v", "I", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '>+1<CR>gv=gv")
 
--- Allows use of 'J' without cursor moving
--- vim.keymap.set("n", "J", "mzJ`z")
-vim.keymap.set("n", "Q", "mzJ`z")
+-- Remaps J to Q and does so without cursor moving
+vim.keymap.set({ "n", "v" }, "Q", "mzJ`z")
 
 -- Quick paste for clipboard register
 -- vim.keymap.set("n", "<leader>p", "\"+p")
@@ -194,6 +275,7 @@ vim.keymap.set("n", "U", "<C-r>")
 
 -- Remove ex mode
 -- vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "gQ", "<nop>")
 
 -- Search and replace current word hovered over
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
@@ -296,12 +378,12 @@ vim.keymap.set('n', '<leader>th', api.tree.open)
 -- ┌───────────┐
 -- │  HARPOON  │
 -- └───────────┘
-local harpoon = require("harpoon")
-vim.keymap.set('n', '<C-e>', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end)
-vim.keymap.set('n', '<leader>r', function() harpoon:list():remove() end)
-vim.keymap.set("n", "<C-m>", function() harpoon:list():next() end)
-vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)
+-- local harpoon = require("harpoon")
+-- vim.keymap.set('n', '<C-e>', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+-- vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end)
+-- vim.keymap.set('n', '<leader>r', function() harpoon:list():remove() end)
+-- vim.keymap.set("n", "<C-m>", function() harpoon:list():next() end)
+-- vim.keymap.set("n", "<C-p>", function() harpoon:list():prev() end)
 
 -- ┌────────────┐
 -- │  UNDOTREE  │
@@ -315,4 +397,14 @@ vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 -- hooks.add("setup_mappings", function(map)
 -- 	map("n", "n", "nzzzv")
 -- 	map("N", "N", "Nzzzv")
--- end)
+
+
+
+
+
+
+-- Change movement keys to be like directional arrows
+-- vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
+-- This ^ would be usable with the following line, but it
+-- causes vim to crash for some reason
+-- vim.opt.langremap = true

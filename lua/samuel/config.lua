@@ -1,39 +1,86 @@
--- ┌────────────┐
--- │            │
--- │  SETTINGS  │
--- │            │
--- └────────────┘
+-- ┌────────┐
+-- │        │
+-- │  TABS  │
+-- │        │
+-- └────────┘
 
--- Tab spacing
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 
--- Enables relative line numbers
+-- ┌────────────────┐
+-- │                │
+-- │  LINE NUMBERS  │
+-- │                │
+-- └────────────────┘
+
 vim.wo.relativenumber = true
 vim.opt.number = true
+
+-- ┌───────┐
+-- │       │
+-- │  LSP  │
+-- │       │
+-- └───────┘
 
 -- Stops LSP warnings/errors from
 -- blocking line numbers
 vim.opt.signcolumn = "no"
+
+-- ┌──────────┐
+-- │          │
+-- │  SPLITS  │
+-- │          │
+-- └──────────┘
 
 -- Commands that cause screen splits
 -- will appear at bottom instead of top
 -- (:h for example)
 vim.opt.splitbelow = true
 
--- Stops text in single line from wrapping
--- to beginning if too much for screen
--- to display
+-- ┌─────────────┐
+-- │             │
+-- │  LINE WRAP  │
+-- │             │
+-- └─────────────┘
+
 vim.opt.wrap = false
+
+
+-- ┌────────────────┐
+-- │                │
+-- │  VISUAL BLOCK  │
+-- │                │
+-- └────────────────┘
+
+-- Allows visual block to extend
+-- into blank space
 vim.opt.virtualedit = "block"
+
+-- ┌────────────┐
+-- │            │
+-- │  COMMANDS  │
+-- │            │
+-- └────────────┘
 
 -- Allows tab-autocomplete for vim commands
 -- to work regardless of case
 vim.opt.ignorecase = true
 
+-- ┌─────────────┐
+-- │             │
+-- │  SEARCHING  │
+-- │             │
+-- └─────────────┘
+
 -- Shows all searched text in bottom window
 vim.opt.inccommand = "split"
+
+-- ┌──────────┐
+-- │          │
+-- │  COLORS  │
+-- │          │
+-- └──────────┘
 
 -- Optionally enable 24-bit color
 vim.opt.termguicolors = true
