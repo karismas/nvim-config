@@ -4,6 +4,25 @@
 -- 																		 └──────────┘
 -- 	==============================================================================================================================================================
 
+
+
+
+
+
+
+
+-- FIX yL
+-- MAKE BLOCK SELECTION INSERT (<C-v>I) NOT GO BACK TO TOP OF SELECTION
+
+
+
+
+
+
+
+
+
+
 -- Remaps i to select/delete/change up instead of waiting for text-object
 -- vim.keymap.set("o", "i", "<Up>")
 vim.keymap.set("o", "i", function()
@@ -16,6 +35,58 @@ vim.keymap.set("o", "i", function()
 	return "<Up>"
 
 end, { expr = true })
+
+
+
+-- FLIPS BOOLEANS
+vim.keymap.set("n", "<leader>b", function()
+
+	local vpos = vim.fn.getcurpos()
+	local str = vim.api.nvim_buf_get_lines(0, vpos[2] - 1, vpos[2], false)[1]
+	local actual_char = string.sub(str, vpos[3], vpos[3])
+
+	local char = actual_char
+	if char == "e" then
+		char = string.sub(str, vpos[3] - 1, vpos[3] - 1)
+	end
+
+	local trueString = "true"
+	local falseString = "false"
+	local word = ""
+	local otherWord = ""
+	if string.find(trueString, char, 1, true) then
+		word = "true"
+		otherWord = "false"
+	elseif string.find(falseString, char, 1, true) then
+		word = "false"
+		otherWord = "true"
+	else
+		print("Your cursor is not on 'true' or 'false'!")
+		return
+	end
+
+	local letterPos = string.find(word, actual_char, 1, true)
+	local leftPos = 1 - letterPos
+	local rightPos = string.len(word) - letterPos
+	if string.sub(str, vpos[3] + leftPos, vpos[3] + rightPos) ~= word then
+		print("Your cursor is not on 'true' or 'false'!")
+		return
+	end
+
+	local moveLeft = string.rep("<Left>", math.abs(leftPos))
+	local moveRight = string.rep("<Right>", string.len(word) - 1)
+	local changes = "c" .. otherWord .. "<Esc>"
+	local moveBackLeft = string.rep("<Left>", rightPos)
+	if word == "false" and actual_char == "f" then
+		moveBackLeft = moveBackLeft:sub(1, -7)
+	elseif word == "true" and actual_char == "t" then
+		moveBackLeft = moveBackLeft .. "<Left>"
+	end
+
+	local keys = vim.api.nvim_replace_termcodes(moveLeft .. "v" .. moveRight .. changes .. moveBackLeft, true, true, true)
+	vim.api.nvim_feedkeys(keys, "n", false)
+
+end)
 
 --          ┌────────┐                     ┌───┐    
 --          │  <Up>  │                     │ I │    
