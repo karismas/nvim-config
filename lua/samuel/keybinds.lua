@@ -63,8 +63,8 @@ vim.keymap.set({ "n", "o" }, "K", "G")
 -- └───────┘       └───────┘
 
 local neoscroll = require("neoscroll")
-vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, true, 300) end)
-vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, true, 300) end)
+vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, { move_cursor=true, duration=300 }) end)
+vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, { move_cursor=true, duration=300 }) end)
 
 
 
