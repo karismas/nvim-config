@@ -6,7 +6,7 @@
 vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
 
 -- DO NOT REMOVE: makes langmap work with mappings
-vim.opt.langremap = true
+vim.opt.langremap = false
 
 -- Change insert mode
 vim.keymap.set({ "n", "v" }, "H", "I")
