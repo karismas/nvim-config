@@ -57,8 +57,8 @@ end, { expr = true })
 
 -- Change scrolling keys
 local neoscroll = require("neoscroll")
-vim.keymap.set({"n", "v"}, "<C-c>", function() neoscroll.scroll(-vim.wo.scroll, true, 300) end)
-vim.keymap.set({"n", "v"}, "<C-t>", function() neoscroll.scroll(vim.wo.scroll, true, 300) end)
+vim.keymap.set({"n", "v"}, "<C-c>", function() neoscroll.scroll(-vim.wo.scroll, { move_cursor=true, duration=300 }) end)
+vim.keymap.set({"n", "v"}, "<C-t>", function() neoscroll.scroll(vim.wo.scroll, { move_cursor=true, duration=300 }) end)
 
 -- Change top/bottom of document keybinds
 vim.keymap.set("n", "C", "gg")
