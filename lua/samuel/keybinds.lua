@@ -2,8 +2,49 @@
 -- │  STANDARD  │
 -- └────────────┘
 
+-- COOL TITLE MAKER
+
+vim.keymap.set("v", "<leader>kj", function()
+
+	-- Fix capitalization of "wasn't"
+	-- Fix capitalization of words after periods
+
+	local caps = {"At", "But", "By", "Down", "For", "From", "If",
+				   "In", "Into", "Like", "Near", "Nor", "Of", "Off",
+				   "On", "Once", "Onto", "Or", "Over", "Past", "So",
+				   "Than", "That", "To", "Upon", "When", "With", "Yet"}
+	local uncaps = {"at", "but", "by", "down", "for", "from", "if",
+				   "in", "into", "like", "near", "nor", "of", "off",
+				   "on", "once", "onto", "or", "over", "past", "so",
+				   "than", "that", "to", "upon", "when", "with", "yet"}
+
+	local combined = ":s/\\<./\\u&/ge"
+
+	for i = 1, #uncaps do
+		combined = combined .. " | '<,'>s/\\<" .. caps[i] .. "\\>/" .. uncaps[i] .. "/geI"
+	end
+
+	combined = combined .. " | let @/ = \"\"<CR><CR>"
+
+	return combined
+
+end, {expr = true, silent = true})
+
+-- TEST
+-- i was at the park but by the time was down at the river
+-- i was already hungry for burgers from five guys. if there
+-- wasn't a five guys in the mall i would hav went into shock,
+-- but, like, there was one near the starbuck. i would not not
+-- go in, nor would i not not not not go in, so, as a man of my
+-- word, i was off. on the off-chance that once i got there it
+-- was closed, i would climb onto the building and cried, or even
+-- over the fence to get past the guards. so, yeah, other than that,
+-- it was finally time to thrust myself upon the burgers. when all was
+-- said and done, i could feel jesus with me. Not just yet, Jesus. Not just yet.
+
+-- CHANGE THIS LATER
 -- Change movement keys to be like directional arrows
-vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
+-- vim.cmd('set langmap=jh,kj,ik,hi,J^,L$')
 
 -- DO NOT REMOVE: makes langmap work with mappings
 vim.opt.langremap = false
@@ -40,10 +81,14 @@ end, {expr = true})
 -- vim.keymap.set({ "n", "v" }, "<C-l>", "w")
 -- vim.keymap.set({ "n", "v" }, "<C-j>", "b")
 
+-- CHANGE THIS LATER
+vim.keymap.set({ "n", "v" }, "Q", "mzJ`z")
+
+
 -- Change scrolling keys
 local neoscroll = require("neoscroll")
-vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, true, 300) end)
-vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, true, 300) end)
+vim.keymap.set({"n", "v"}, "<C-i>", function() neoscroll.scroll(-vim.wo.scroll, { move_cursor=true, duration=300 }) end)
+vim.keymap.set({"n", "v"}, "<C-k>", function() neoscroll.scroll(vim.wo.scroll, { move_cursor=true, duration=300 }) end)
 
 -- Change top/bottom of document keybinds
 vim.keymap.set("n", "I", "gg")
@@ -101,7 +146,7 @@ vim.keymap.set("v", "<leader>d", "\"+d")
 vim.keymap.set("n", "U", "<C-r>")
 
 -- Remove ex mode
-vim.keymap.set("n", "Q", "<nop>")
+-- vim.keymap.set("n", "Q", "<nop>")
 
 -- Search and replace current word hovered over
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
@@ -196,10 +241,10 @@ end)
 -- ┌─────────────┐
 -- │  NVIM-TREE  │
 -- └─────────────┘
-local api = require("nvim-tree.api")
-vim.keymap.set('n', '<leader>tt', api.tree.toggle)
-vim.keymap.set('n', '<leader>tl', function() api.tree.close() api.tree.toggle({focus = false}) end)
-vim.keymap.set('n', '<leader>th', api.tree.open)
+-- local api = require("nvim-tree.api")
+-- vim.keymap.set('n', '<leader>tt', api.tree.toggle)
+-- vim.keymap.set('n', '<leader>tl', function() api.tree.close() api.tree.toggle({focus = false}) end)
+-- vim.keymap.set('n', '<leader>th', api.tree.open)
 
 -- ┌───────────┐
 -- │  HARPOON  │
@@ -224,3 +269,13 @@ vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 -- 	map("n", "n", "nzzzv")
 -- 	map("N", "N", "Nzzzv")
 -- end)
+
+-- Highlights yanked region
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = vim.api.nvim_create_augroup('highlight_yank', {}),
+  desc = 'Hightlight selection on yank',
+  pattern = '*',
+  callback = function()
+    vim.highlight.on_yank { higroup = 'IncSearch', timeout = 100 }
+  end,
+})

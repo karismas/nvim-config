@@ -8,6 +8,7 @@
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
 -- Enables relative line numbers
 vim.wo.relativenumber = true
@@ -59,14 +60,16 @@ vim.opt.scrolloff = 999
 
 -- Combines typical register and system clipboard
 -- vim.opt.clipboard = "unnamedplus"
-
--- Disable netrw
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- THIS LINE SPEEDS UP RUNNING ON WINDOWS
+vim.opt.clipboard = ""
 
 -- Enables persistent undo history
 -- even after closing files
 vim.opt.undofile = true
+
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- Other netrw options
 -- vim.g.netrw_liststyle = 3
