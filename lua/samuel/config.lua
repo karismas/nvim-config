@@ -1,3 +1,6 @@
+-- USED FOR RANDOMIZED BACKGROUND IMAGES!!!
+-- os.execute('osascript ~/Documents/ChangeBackgroundImage.scpt')
+
 -- ┌────────┐
 -- │        │
 -- │  TABS  │
@@ -127,4 +130,4 @@ vim.g.loaded_netrwPlugin = 1
 -- augroup END
 
 -- Changes MarkdownPreview CSS
-vim.cmd([[let g:mkdp_markdown_css = '/Users/hubers001/basic.css']])
+-- vim.cmd([[let g:mkdp_markdown_css = '/Users/hubers001/.config/basic.css']])
